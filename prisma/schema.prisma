@@ -1,0 +1,273 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  CLOSED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(EDITOR)
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum BlogPostStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHED
+}
+
+model BlogCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  color       String   @default("#6366f1")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BlogTag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+}
+
+model BlogPost {
+  id              String         @id @default(cuid())
+  slug            String         @unique
+  title           String
+  excerpt         String
+  content         String         @default("")
+  category        String
+  tags            String[]
+  author          String
+  authorAvatar    String?
+  date            DateTime       @default(now())
+  readingTime     Int            @default(5)
+  thumbnail       String?
+  featuredImage   String?
+  featured        Boolean        @default(false)
+  status          BlogPostStatus @default(DRAFT)
+  scheduledAt     DateTime?
+  publishedAt     DateTime?
+  seoTitle        String?
+  seoDescription  String?
+  metaKeywords    String?
+  ogTitle         String?
+  ogDescription   String?
+  ogImage         String?
+  ogType          String         @default("article")
+  schemaMarkup    String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model PortfolioProject {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  title        String
+  category     String
+  industry     String
+  technologies String[]
+  thumbnail    String?
+  description  String
+  results      String[]
+  liveUrl      String?
+  caseStudyUrl String?
+  videoUrl     String?
+  tall         Boolean  @default(false)
+  published    Boolean  @default(true)
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String
+  icon        String   @default("Bot")
+  gradient    String
+  glow        String
+  content     String?
+  published   Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  company   String
+  review    String
+  rating    Int      @default(5)
+  avatar    String?
+  videoUrl  String?
+  published Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CaseStudy {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  client         String
+  industry       String
+  problem        String
+  solution       String
+  technologies   String[]
+  results        Json
+  beforeMetrics  Json
+  afterMetrics   Json
+  timeline       Json
+  analyticsImage String
+  beforeImage    String
+  accent         String   @default("from-brand-blue to-brand-cyan")
+  published      Boolean  @default(true)
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model SeoPage {
+  id                 String   @id @default(cuid())
+  path               String   @unique
+  title              String
+  description        String
+  keywords           String?
+  canonicalUrl       String?
+  ogTitle            String?
+  ogDescription      String?
+  ogImage            String?
+  ogType             String   @default("website")
+  twitterCard        String   @default("summary_large_image")
+  twitterTitle       String?
+  twitterDescription String?
+  twitterImage       String?
+  twitterSite        String?
+  schemaMarkup       String?
+  noIndex            Boolean  @default(false)
+  noFollow           Boolean  @default(false)
+  includeInSitemap   Boolean  @default(true)
+  sitemapPriority    Float    @default(0.8)
+  sitemapChangeFreq  String   @default("weekly")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model SeoSettings {
+  id                              String   @id @default("default")
+  siteUrl                         String   @default("https://gemivora.com")
+  siteName                        String   @default("Gemivora")
+  defaultTitle                    String?
+  defaultDescription              String?
+  defaultOgImage                  String?
+  defaultTwitterHandle            String?
+  googleAnalyticsId               String?
+  googleTagManagerId              String?
+  googleSearchConsoleVerification String?
+  robotsTxtCustom                   String?
+  sitemapAutoGenerate             Boolean  @default(true)
+  updatedAt                       DateTime @updatedAt
+}
+
+model Media {
+  id         String   @id @default(cuid())
+  filename   String
+  url        String
+  mimeType   String
+  size       Int
+  alt        String?
+  uploadedBy String?
+  createdAt  DateTime @default(now())
+}
+
+model ContactLead {
+  id        String     @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  company   String?
+  message   String
+  source    String?    @default("website")
+  status    LeadStatus @default(NEW)
+  notes     String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model ThemeSettings {
+  id                  String   @id @default("default")
+  primaryColor        String   @default("#2563eb")
+  accentColor         String   @default("#06b6d4")
+  backgroundColor     String   @default("#0a0a0b")
+  cardColor           String   @default("#16161a")
+  foregroundColor     String   @default("#f1f5f9")
+  mutedColor          String   @default("#94a3b8")
+  borderColor         String   @default("#2d2d33")
+  cardBorderColor     String   @default("#2d2d33")
+  navbarBackground    String   @default("rgba(255,255,255,0.95)")
+  navbarText          String   @default("#334155")
+  navbarCtaBackground String   @default("#E8DFD0")
+  dropdownBackground  String   @default("#ffffff")
+  dropdownBorder      String   @default("#e2e8f0")
+  heroGradientStart   String   @default("#2563eb")
+  heroGradientMid     String   @default("#0a0a0b")
+  heroGradientEnd     String   @default("#000000")
+  fontHeading         String   @default("Sora")
+  fontBody            String   @default("Inter")
+  borderRadius        String   @default("0.75rem")
+  updatedAt           DateTime @updatedAt
+}
+
+model HomeSectionSettings {
+  id               String   @id @default("default")
+  hero             Boolean  @default(true)
+  homeIntro        Boolean  @default(true)
+  homeExploreLinks Boolean  @default(true)
+  trustedBy        Boolean  @default(true)
+  services         Boolean  @default(true)
+  whyChooseUs      Boolean  @default(true)
+  caseStudies      Boolean  @default(true)
+  testimonials     Boolean  @default(true)
+  pricing          Boolean  @default(true)
+  technologies     Boolean  @default(true)
+  faq              Boolean  @default(true)
+  updatedAt        DateTime @updatedAt
+}
+
+model SiteContent {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  section   String
+  label     String
+  value     String
+  type      String   @default("text")
+  updatedAt DateTime @updatedAt
+}
