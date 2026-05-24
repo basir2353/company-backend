@@ -6,6 +6,7 @@ import rateLimit from 'express-rate-limit';
 import path from 'path';
 import { env } from './config/env';
 import { errorHandler } from './middleware/errorHandler';
+import { prisma } from './utils/prisma';
 
 import authRoutes from './routes/auth.routes';
 import blogRoutes from './routes/blog.routes';
@@ -47,8 +48,23 @@ export function createApp() {
 
   app.use('/uploads', express.static(path.resolve(env.UPLOAD_DIR)));
 
-  app.get('/health', (_req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  app.get('/health', async (_req, res) => {
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+      res.json({
+        status: 'ok',
+        db: 'connected',
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error('[health] Database check failed:', error);
+      res.status(503).json({
+        status: 'degraded',
+        db: 'disconnected',
+        hint: 'Set DATABASE_URL on Render and run prisma db push + seed',
+        timestamp: new Date().toISOString(),
+      });
+    }
   });
 
   app.get('/sitemap.xml', async (_req, res, next) => {

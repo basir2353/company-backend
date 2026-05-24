@@ -1,7 +1,11 @@
 import { PrismaClient, Role, LeadStatus } from '@prisma/client';
-import { hashPassword } from '../src/utils/password';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
+
+async function hashPassword(password: string) {
+  return bcrypt.hash(password, 12);
+}
 
 async function main() {
   console.log('Seeding Gemivora CMS database...');
