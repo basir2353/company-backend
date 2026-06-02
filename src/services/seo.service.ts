@@ -65,6 +65,9 @@ export function serializeSeoPage(page: SeoPage, settings: SeoSettings) {
 
 export async function generateSitemapUrls(): Promise<SitemapUrl[]> {
   const settings = await getSeoSettings();
+  if (!settings.sitemapAutoGenerate) {
+    return [];
+  }
   const base = settings.siteUrl.replace(/\/$/, '');
   const urls: SitemapUrl[] = [];
 
@@ -103,6 +106,16 @@ export async function generateSitemapUrls(): Promise<SitemapUrl[]> {
       lastmod: service.updatedAt.toISOString(),
       changefreq: 'monthly',
       priority: 0.6,
+    });
+  }
+
+  const portfolio = await prisma.portfolioProject.findMany({ where: { published: true } });
+  for (const project of portfolio) {
+    urls.push({
+      loc: `${base}/portfolio#${project.slug}`,
+      lastmod: project.updatedAt.toISOString(),
+      changefreq: 'monthly',
+      priority: 0.5,
     });
   }
 

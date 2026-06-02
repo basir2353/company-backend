@@ -42,54 +42,88 @@ async function main() {
 
   await prisma.seoSettings.upsert({
     where: { id: 'default' },
-    update: {},
+    update: {
+      siteUrl: 'https://company-frontend-liart.vercel.app',
+      siteName: 'Creatd',
+      defaultTitle: 'Creatd — Think It. Creatd | AI Solutions',
+      defaultDescription:
+        'Creatd builds AI automation and software products for teams that want scalable digital experiences.',
+      defaultTwitterHandle: '@creatd',
+      sitemapAutoGenerate: true,
+    },
     create: {
       id: 'default',
-      siteUrl: 'https://gemivora.com',
-      siteName: 'Gemivora',
-      defaultTitle: 'Gemivora — AI Agency & Software Solutions',
-      defaultDescription: 'Premium AI automation and software development agency for global businesses.',
-      defaultTwitterHandle: '@gemivora',
+      siteUrl: 'https://company-frontend-liart.vercel.app',
+      siteName: 'Creatd',
+      defaultTitle: 'Creatd — Think It. Creatd | AI Solutions',
+      defaultDescription:
+        'Creatd builds AI automation and software products for teams that want scalable digital experiences.',
+      defaultTwitterHandle: '@creatd',
+      sitemapAutoGenerate: true,
     },
   });
 
   const seoPages = [
     {
       path: '/',
-      title: 'Gemivora — AI Agency & Software Solutions',
-      description: 'Premium AI automation and software development agency. Enterprise-grade digital solutions for global businesses.',
-      keywords: 'AI agency, software development, automation, SaaS',
+      title: 'Creatd — Think It. Creatd | AI Solutions',
+      description:
+        'Creatd builds AI automation and software products. Replace manual work with custom AI systems, chatbots, and SaaS.',
+      keywords: 'Creatd, AI solutions, AI automation, software development, chatbots, SaaS',
       ogType: 'website',
+      sitemapPriority: 1,
     },
     {
       path: '/about',
-      title: 'About Us | Gemivora',
-      description: 'Learn about our team, mission, and approach to building intelligent digital products.',
-      keywords: 'about gemivora, AI team, software agency',
+      title: 'About Creatd | AI Solutions Studio',
+      description: 'Learn about Creatd — our story, mission, team, and journey building AI-powered software.',
+      keywords: 'about Creatd, AI team, software agency',
     },
     {
       path: '/services',
-      title: 'Services | Gemivora',
+      title: 'AI & Software Services | Creatd',
       description: 'AI automation, web development, SEO, chatbots, and enterprise software services.',
-      keywords: 'AI services, web development, SEO agency',
+      keywords: 'AI services, web development, SEO agency, Creatd services',
     },
     {
       path: '/portfolio',
-      title: 'Portfolio | Gemivora',
-      description: 'Explore our latest AI projects, SaaS platforms, and case studies.',
-      keywords: 'portfolio, case studies, AI projects',
+      title: 'Portfolio & Case Studies | Creatd',
+      description: 'Explore Creatd AI projects, SaaS platforms, and client work.',
+      keywords: 'portfolio, case studies, AI projects, Creatd work',
     },
     {
       path: '/blog',
-      title: 'Blog | Gemivora',
+      title: 'Blog | Creatd AI Insights',
       description: 'Insights on AI, SEO, marketing, automation, and modern software development.',
       keywords: 'AI blog, SEO tips, software development blog',
     },
     {
       path: '/contact',
-      title: 'Contact | Gemivora',
-      description: 'Get in touch with our team to discuss your next AI or software project.',
-      keywords: 'contact, hire AI agency',
+      title: 'Contact Creatd | Book a Consultation',
+      description: 'Get in touch with Creatd to discuss your next AI or software project.',
+      keywords: 'contact Creatd, hire AI agency, book consultation',
+    },
+    {
+      path: '/privacy',
+      title: 'Privacy Policy | Creatd',
+      description: 'How Creatd collects, uses, and protects your personal information.',
+      noIndex: false,
+      sitemapPriority: 0.3,
+      sitemapChangeFreq: 'yearly',
+    },
+    {
+      path: '/terms',
+      title: 'Terms of Service | Creatd',
+      description: 'Terms and conditions for using Creatd services and website.',
+      sitemapPriority: 0.3,
+      sitemapChangeFreq: 'yearly',
+    },
+    {
+      path: '/cookies',
+      title: 'Cookie Policy | Creatd',
+      description: 'How Creatd uses cookies and similar technologies.',
+      sitemapPriority: 0.3,
+      sitemapChangeFreq: 'yearly',
     },
   ];
 

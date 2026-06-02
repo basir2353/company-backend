@@ -100,6 +100,27 @@ router.get(
 );
 
 router.get(
+  '/seo-settings',
+  asyncHandler(async (_req, res) => {
+    const settings = await getSeoSettings();
+    res.json({ settings });
+  }),
+);
+
+router.get(
+  '/sitemap',
+  asyncHandler(async (_req, res) => {
+    const settings = await getSeoSettings();
+    if (!settings.sitemapAutoGenerate) {
+      res.json({ urls: [] });
+      return;
+    }
+    const urls = await generateSitemapUrls();
+    res.json({ urls });
+  }),
+);
+
+router.get(
   '/seo/*path',
   asyncHandler(async (req, res) => {
     const raw = req.params.path;
