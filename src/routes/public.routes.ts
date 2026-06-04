@@ -10,6 +10,7 @@ import {
   serializeSeoPage,
 } from '../services/seo.service';
 import { getOrCreateHomeSections } from './home-sections.routes';
+import { normalizeMediaUrl } from '../utils/media-url';
 
 const router = Router();
 
@@ -62,7 +63,12 @@ router.get(
       where: { published: true },
       orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
     });
-    res.json({ projects });
+    res.json({
+      projects: projects.map((p) => ({
+        ...p,
+        thumbnail: normalizeMediaUrl(p.thumbnail) ?? p.thumbnail,
+      })),
+    });
   }),
 );
 

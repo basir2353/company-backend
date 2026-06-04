@@ -1,5 +1,6 @@
 import { BlogPost, BlogPostStatus } from '@prisma/client';
 import { slugify } from '../utils/helpers';
+import { normalizeMediaUrl } from '../utils/media-url';
 
 export function computeReadingTime(html: string): number {
   const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -112,8 +113,17 @@ export function prepareBlogData(
 
 export function serializeBlogPost(post: BlogPost) {
   const status = resolveBlogStatus(post);
+  const thumbnail = normalizeMediaUrl(post.thumbnail) ?? post.thumbnail;
+  const featuredImage = normalizeMediaUrl(post.featuredImage) ?? post.featuredImage;
+  const authorAvatar = normalizeMediaUrl(post.authorAvatar) ?? post.authorAvatar;
+  const ogImage = normalizeMediaUrl(post.ogImage) ?? post.ogImage;
+
   return {
     ...post,
+    thumbnail,
+    featuredImage,
+    authorAvatar,
+    ogImage,
     status,
     isPublished: status === BlogPostStatus.PUBLISHED,
   };

@@ -27,6 +27,8 @@ import publicRoutes from './routes/public.routes';
 export function createApp() {
   const app = express();
 
+  app.set('trust proxy', 1);
+
   app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
   app.use(
     cors({

@@ -9,6 +9,7 @@ import { asyncHandler, ApiError } from '../middleware/errorHandler';
 import { upload } from '../middleware/upload';
 import { env } from '../config/env';
 import { paramId } from '../utils/helpers';
+import { getPublicBaseUrl } from '../utils/media-url';
 
 const router = Router();
 
@@ -38,7 +39,7 @@ router.post(
   asyncHandler(async (req: AuthRequest, res: Response) => {
     if (!req.file) throw new ApiError(400, 'No file uploaded');
 
-    const baseUrl = `${req.protocol}://${req.get('host')}`;
+    const baseUrl = getPublicBaseUrl();
     const url = `${baseUrl}/uploads/${req.file.filename}`;
 
     const media = await prisma.media.create({
