@@ -135,6 +135,51 @@ async function main() {
     });
   }
 
+  const siteContentDefaults = [
+    {
+      key: 'footer.tagline',
+      section: 'footer',
+      label: 'Footer tagline',
+      value:
+        'Think It. Creatd — enterprise-grade AI solutions for ambitious teams worldwide.',
+      type: 'text',
+    },
+    {
+      key: 'site.tagline',
+      section: 'brand',
+      label: 'Logo subtitle',
+      value: 'AI Solutions',
+      type: 'text',
+    },
+    {
+      key: 'site.slogan',
+      section: 'brand',
+      label: 'Site slogan',
+      value: 'Think It. Creatd',
+      type: 'text',
+    },
+    {
+      key: 'footer.social_links',
+      section: 'footer',
+      label: 'Social links',
+      value: JSON.stringify([
+        { name: 'LinkedIn', slug: 'linkedin', href: 'https://linkedin.com', icon: 'briefcase' },
+        { name: 'GitHub', slug: 'github', href: 'https://github.com', icon: 'code' },
+        { name: 'Twitter', slug: 'x', href: 'https://twitter.com', icon: 'browser' },
+        { name: 'Instagram', slug: 'instagram', href: 'https://instagram.com', icon: 'mobile' },
+      ]),
+      type: 'json',
+    },
+  ];
+
+  for (const item of siteContentDefaults) {
+    await prisma.siteContent.upsert({
+      where: { key: item.key },
+      update: { value: item.value, label: item.label, section: item.section, type: item.type },
+      create: item,
+    });
+  }
+
   await prisma.blogCategory.createMany({
     data: [
       { name: 'AI', slug: 'ai', color: '#8b5cf6' },

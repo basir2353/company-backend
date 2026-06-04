@@ -100,6 +100,17 @@ router.get(
 );
 
 router.get(
+  '/site-content',
+  asyncHandler(async (_req, res) => {
+    const items = await prisma.siteContent.findMany({
+      orderBy: [{ section: 'asc' }, { label: 'asc' }],
+    });
+    const content = Object.fromEntries(items.map((item) => [item.key, item.value]));
+    res.json({ content, items });
+  }),
+);
+
+router.get(
   '/seo-settings',
   asyncHandler(async (_req, res) => {
     const settings = await getSeoSettings();
