@@ -1,6 +1,23 @@
 import { BlogPost, BlogPostStatus } from '@prisma/client';
 import { slugify } from '../utils/helpers';
-import { normalizeMediaUrl } from '../utils/media-url';
+import { normalizeMediaUrl, normalizeHtmlMediaUrls, toStoredMediaPath } from '../utils/media-url';
+
+export function normalizeHtmlMediaUrlsForStorage(html?: string | null): string {
+  if (!html?.trim()) return html ?? '';
+
+  return html.replace(
+    /(<img[^>]+src=["'])([^"']+)(["'])/gi,
+    (_match, prefix: string, src: string, suffix: string) => {
+      const stored = toStoredMediaPath(src);
+      return `${prefix}${stored ?? src}${suffix}`;
+    },
+  );
+}
+
+function storeMediaField(value?: string | null): string | null {
+  if (value === undefined || value === null) return null;
+  return toStoredMediaPath(value) ?? value;
+}
 
 export function computeReadingTime(html: string): number {
   const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -58,12 +75,13 @@ export function prepareBlogData(
       : input.scheduledAt
         ? new Date(String(input.scheduledAt))
         : existing?.scheduledAt ?? null;
-  const featuredImage =
+  const featuredImage = storeMediaField(
     (input.featuredImage as string | null | undefined) ??
-    (input.thumbnail as string | null | undefined) ??
-    existing?.featuredImage ??
-    existing?.thumbnail ??
-    null;
+      (input.thumbnail as string | null | undefined) ??
+      existing?.featuredImage ??
+      existing?.thumbnail ??
+      null,
+  );
 
   let publishedAt = existing?.publishedAt ?? null;
   if (status === BlogPostStatus.PUBLISHED && !publishedAt) publishedAt = new Date();
@@ -77,21 +95,21 @@ export function prepareBlogData(
   const seoDescription = (input.seoDescription as string | null | undefined) ?? excerpt;
   const ogTitle = (input.ogTitle as string | null | undefined) ?? seoTitle ?? title;
   const ogDescription = (input.ogDescription as string | null | undefined) ?? seoDescription ?? excerpt;
-  const ogImage = (input.ogImage as string | null | undefined) ?? featuredImage;
+  const ogImage = storeMediaField((input.ogImage as string | null | undefined) ?? featuredImage);
 
   const schemaMarkup =
     (input.schemaMarkup as string | null | undefined) ??
-    buildSchemaMarkup({ title, excerpt, author, authorAvatar: (input.authorAvatar as string | null | undefined) ?? existing?.authorAvatar ?? null, date, featuredImage, thumbnail: featuredImage, slug });
+    buildSchemaMarkup({ title, excerpt, author, authorAvatar: storeMediaField((input.authorAvatar as string | null | undefined) ?? existing?.authorAvatar ?? null), date, featuredImage, thumbnail: featuredImage, slug });
 
   return {
     slug,
     title,
     excerpt,
-    content,
+    content: normalizeHtmlMediaUrlsForStorage(String(input.content ?? existing?.content ?? '')),
     category: String(input.category ?? existing?.category ?? 'General'),
     tags: Array.isArray(input.tags) ? input.tags.map(String) : existing?.tags ?? [],
     author,
-    authorAvatar: (input.authorAvatar as string | null | undefined) ?? existing?.authorAvatar ?? null,
+    authorAvatar: storeMediaField((input.authorAvatar as string | null | undefined) ?? existing?.authorAvatar ?? null),
     date,
     readingTime: Number(input.readingTime ?? computeReadingTime(content)),
     thumbnail: featuredImage,
@@ -120,6 +138,7 @@ export function serializeBlogPost(post: BlogPost) {
 
   return {
     ...post,
+    content: normalizeHtmlMediaUrls(post.content),
     thumbnail,
     featuredImage,
     authorAvatar,

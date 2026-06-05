@@ -90,7 +90,12 @@ router.get(
       where: { published: true },
       orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
     });
-    res.json({ testimonials });
+    res.json({
+      testimonials: testimonials.map((t) => ({
+        ...t,
+        avatar: normalizeMediaUrl(t.avatar) ?? t.avatar,
+      })),
+    });
   }),
 );
 
@@ -101,7 +106,13 @@ router.get(
       where: { published: true },
       orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
     });
-    res.json({ caseStudies });
+    res.json({
+      caseStudies: caseStudies.map((c) => ({
+        ...c,
+        analyticsImage: normalizeMediaUrl(c.analyticsImage) ?? c.analyticsImage,
+        beforeImage: normalizeMediaUrl(c.beforeImage) ?? c.beforeImage,
+      })),
+    });
   }),
 );
 

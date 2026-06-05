@@ -21,8 +21,12 @@ until npx prisma db push --skip-generate; do
   sleep 3
 done
 
-echo "==> Seeding database..."
-npx prisma db seed
+if [ "$RUN_DB_SEED" = "true" ]; then
+  echo "==> Seeding database (RUN_DB_SEED=true)..."
+  npx prisma db seed
+else
+  echo "==> Skipping seed (set RUN_DB_SEED=true for first-time setup only)"
+fi
 
 echo "==> Starting API server..."
 exec "$@"

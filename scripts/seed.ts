@@ -42,15 +42,7 @@ async function main() {
 
   await prisma.seoSettings.upsert({
     where: { id: 'default' },
-    update: {
-      siteUrl: 'https://company-frontend-liart.vercel.app',
-      siteName: 'Creatd',
-      defaultTitle: 'Creatd — Think It. Creatd | AI Solutions',
-      defaultDescription:
-        'Creatd builds AI automation and software products for teams that want scalable digital experiences.',
-      defaultTwitterHandle: '@creatd',
-      sitemapAutoGenerate: true,
-    },
+    update: {},
     create: {
       id: 'default',
       siteUrl: 'https://company-frontend-liart.vercel.app',
@@ -130,7 +122,7 @@ async function main() {
   for (const page of seoPages) {
     await prisma.seoPage.upsert({
       where: { path: page.path },
-      update: page,
+      update: {},
       create: page,
     });
   }
@@ -175,7 +167,7 @@ async function main() {
   for (const item of siteContentDefaults) {
     await prisma.siteContent.upsert({
       where: { key: item.key },
-      update: { value: item.value, label: item.label, section: item.section, type: item.type },
+      update: {},
       create: item,
     });
   }

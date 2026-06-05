@@ -9,7 +9,7 @@ import { asyncHandler, ApiError } from '../middleware/errorHandler';
 import { upload } from '../middleware/upload';
 import { env } from '../config/env';
 import { paramId } from '../utils/helpers';
-import { getPublicBaseUrl } from '../utils/media-url';
+import { normalizeMediaUrl, serializeMediaRecord } from '../utils/media-url';
 
 const router = Router();
 
@@ -27,7 +27,10 @@ router.get(
       prisma.media.count(),
     ]);
 
-    res.json({ media, pagination: { page, limit, total, pages: Math.ceil(total / limit) } });
+    res.json({
+      media: media.map(serializeMediaRecord),
+      pagination: { page, limit, total, pages: Math.ceil(total / limit) },
+    });
   }),
 );
 
@@ -39,8 +42,7 @@ router.post(
   asyncHandler(async (req: AuthRequest, res: Response) => {
     if (!req.file) throw new ApiError(400, 'No file uploaded');
 
-    const baseUrl = getPublicBaseUrl();
-    const url = `${baseUrl}/uploads/${req.file.filename}`;
+    const url = `/uploads/${req.file.filename}`;
 
     const media = await prisma.media.create({
       data: {
@@ -53,7 +55,7 @@ router.post(
       },
     });
 
-    res.status(201).json({ media });
+    res.status(201).json({ media: serializeMediaRecord(media) });
   }),
 );
 
