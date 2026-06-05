@@ -89,9 +89,13 @@ export function normalizeHtmlMediaUrls(html?: string | null): string {
   );
 }
 
-export function serializeMediaRecord<T extends { url: string }>(media: T): T {
+export function serializeMediaRecord<T extends { url: string }>(
+  media: T,
+): T & { publicUrl: string } {
+  const storedUrl = toStoredMediaPath(media.url) ?? media.url;
   return {
     ...media,
-    url: normalizeMediaUrl(media.url) ?? media.url,
+    url: storedUrl,
+    publicUrl: normalizeMediaUrl(storedUrl) ?? storedUrl,
   };
 }

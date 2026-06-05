@@ -222,6 +222,13 @@ model ContactLead {
   updatedAt DateTime   @updatedAt
 }
 
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  source    String?  @default("website")
+  createdAt DateTime @default(now())
+}
+
 model ThemeSettings {
   id                  String   @id @default("default")
   primaryColor        String   @default("#2563eb")

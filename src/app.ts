@@ -22,6 +22,7 @@ import homeSectionsRoutes from './routes/home-sections.routes';
 import caseStudiesRoutes from './routes/case-studies.routes';
 import analyticsRoutes from './routes/analytics.routes';
 import contentRoutes from './routes/content.routes';
+import newsletterRoutes from './routes/newsletter.routes';
 import publicRoutes from './routes/public.routes';
 
 export function createApp() {
@@ -102,6 +103,7 @@ export function createApp() {
   app.use('/api/case-studies', caseStudiesRoutes);
   app.use('/api/analytics', analyticsRoutes);
   app.use('/api/content', contentRoutes);
+  app.use('/api/newsletter', newsletterRoutes);
   app.use('/api/public', publicRoutes);
 
   app.use(errorHandler);

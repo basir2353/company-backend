@@ -6,8 +6,26 @@ import { authenticate } from '../middleware/auth';
 import { authorize } from '../middleware/rbac';
 import { asyncHandler, ApiError } from '../middleware/errorHandler';
 import { slugify, paramId } from '../utils/helpers';
+import { toStoredMediaPath, normalizeMediaUrl } from '../utils/media-url';
 
 const router = Router();
+
+function normalizePortfolioData<T extends { thumbnail?: string | null }>(data: T): T {
+  if (data.thumbnail === undefined) return data;
+  return {
+    ...data,
+    thumbnail: data.thumbnail ? toStoredMediaPath(data.thumbnail) ?? data.thumbnail : null,
+  };
+}
+
+function serializePortfolioProject<T extends { thumbnail?: string | null }>(project: T) {
+  return {
+    ...project,
+    thumbnail: project.thumbnail
+      ? normalizeMediaUrl(project.thumbnail) ?? project.thumbnail
+      : project.thumbnail,
+  };
+}
 
 const portfolioSchema = z.object({
   slug: z.string().optional(),
@@ -32,7 +50,7 @@ router.get(
   authorize(Role.VIEWER),
   asyncHandler(async (_req, res) => {
     const projects = await prisma.portfolioProject.findMany({ orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }] });
-    res.json({ projects });
+    res.json({ projects: projects.map(serializePortfolioProject) });
   }),
 );
 
@@ -46,7 +64,7 @@ router.get(
       where: { OR: [{ id }, { slug: id }] },
     });
     if (!project) throw new ApiError(404, 'Project not found');
-    res.json({ project });
+    res.json({ project: serializePortfolioProject(project) });
   }),
 );
 
@@ -57,8 +75,10 @@ router.post(
   asyncHandler(async (req, res) => {
     const data = portfolioSchema.parse(req.body);
     const slug = data.slug || slugify(data.title);
-    const project = await prisma.portfolioProject.create({ data: { ...data, slug } });
-    res.status(201).json({ project });
+    const project = await prisma.portfolioProject.create({
+      data: { ...normalizePortfolioData(data), slug },
+    });
+    res.status(201).json({ project: serializePortfolioProject(project) });
   }),
 );
 
@@ -68,8 +88,11 @@ router.put(
   authorize(Role.EDITOR),
   asyncHandler(async (req, res) => {
     const data = portfolioSchema.partial().parse(req.body);
-    const project = await prisma.portfolioProject.update({ where: { id: paramId(req.params.id) }, data });
-    res.json({ project });
+    const project = await prisma.portfolioProject.update({
+      where: { id: paramId(req.params.id) },
+      data: normalizePortfolioData(data),
+    });
+    res.json({ project: serializePortfolioProject(project) });
   }),
 );
 
