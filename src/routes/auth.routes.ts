@@ -1,3 +1,7 @@
+/**
+ * Auth API. For server-side GA4, emit Measurement Protocol "login" / "sign_up" events
+ * on successful POST /login and POST /register (use a server-only GA4 API secret).
+ */
 import { Router, Response } from 'express';
 import { Role } from '@prisma/client';
 import { z } from 'zod';

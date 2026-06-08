@@ -1,3 +1,7 @@
+/**
+ * Lead capture API. For server-side GA4, send a Measurement Protocol event here after
+ * prisma.contactLead.create() — e.g. event name "generate_lead" with source param.
+ */
 import { Router } from 'express';
 import { LeadStatus, Role } from '@prisma/client';
 import { z } from 'zod';

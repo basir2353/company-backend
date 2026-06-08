@@ -1,3 +1,13 @@
+/**
+ * Internal dashboard analytics (content counts, leads) — not Google Analytics.
+ *
+ * Future server-side GA4 recommendations:
+ * - POST /api/analytics/events — accept { event, params } from trusted server actions
+ * - Use GA4 Measurement Protocol (https://developers.google.com/analytics/devguides/collection/protocol/ga4)
+ *   with MEASUREMENT_ID + API_SECRET env vars — never expose the secret to the browser.
+ * - Mirror key backend events: lead created (POST /leads), admin login (POST /auth/login),
+ *   user registered (POST /auth/register).
+ */
 import { Router } from 'express';
 import { Role } from '@prisma/client';
 import { prisma } from '../utils/prisma';
