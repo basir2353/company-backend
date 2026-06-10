@@ -38,7 +38,12 @@ router.post(
   '/upload',
   authenticate,
   authorize(Role.EDITOR),
-  upload.single('file'),
+  (req, res, next) => {
+    upload.single('file')(req, res, (err) => {
+      if (err) return next(err);
+      next();
+    });
+  },
   asyncHandler(async (req: AuthRequest, res: Response) => {
     if (!req.file) throw new ApiError(400, 'No file uploaded');
 

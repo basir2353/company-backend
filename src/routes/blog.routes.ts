@@ -183,7 +183,10 @@ router.delete(
   authenticate,
   authorize(Role.ADMIN),
   asyncHandler(async (req, res) => {
-    await prisma.blogPost.delete({ where: { id: paramId(req.params.id) } });
+    const id = paramId(req.params.id);
+    const existing = await prisma.blogPost.findUnique({ where: { id } });
+    if (!existing) throw new ApiError(404, 'Blog post not found');
+    await prisma.blogPost.delete({ where: { id } });
     res.json({ success: true });
   }),
 );

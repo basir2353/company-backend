@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { Prisma } from '@prisma/client';
 import { ZodError } from 'zod';
 
 export class ApiError extends Error {
@@ -30,6 +31,23 @@ export function errorHandler(err: Error, _req: Request, res: Response, _next: Ne
       error: 'Validation failed',
       details: err.issues.map((i) => ({ path: i.path.join('.'), message: i.message })),
     });
+    return;
+  }
+
+  if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    if (err.code === 'P2002') {
+      const target = Array.isArray(err.meta?.target) ? err.meta.target.join(', ') : 'field';
+      res.status(409).json({ error: `A record with this ${target} already exists` });
+      return;
+    }
+    if (err.code === 'P2025') {
+      res.status(404).json({ error: 'Record not found' });
+      return;
+    }
+  }
+
+  if (err.message === 'Invalid file type') {
+    res.status(400).json({ error: 'Invalid file type. Use JPEG, PNG, GIF, WebP, SVG, PDF, or video.' });
     return;
   }
 
