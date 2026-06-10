@@ -1,6 +1,28 @@
 import { BlogPost, BlogPostStatus } from '@prisma/client';
 import { slugify } from '../utils/helpers';
 import { normalizeMediaUrl, normalizeHtmlMediaUrls, toStoredMediaPath } from '../utils/media-url';
+import { prisma } from '../utils/prisma';
+
+export async function ensureUniqueBlogSlug(baseSlug: string, excludeId?: string): Promise<string> {
+  const normalized = baseSlug.trim() || `post-${Date.now()}`;
+  let candidate = normalized;
+  let counter = 1;
+
+  while (true) {
+    const conflict = await prisma.blogPost.findFirst({
+      where: {
+        slug: candidate,
+        ...(excludeId ? { id: { not: excludeId } } : {}),
+      },
+      select: { id: true },
+    });
+
+    if (!conflict) return candidate;
+
+    counter += 1;
+    candidate = `${normalized}-${counter}`;
+  }
+}
 
 export function normalizeHtmlMediaUrlsForStorage(html?: string | null): string {
   if (!html?.trim()) return html ?? '';
@@ -66,7 +88,8 @@ export function prepareBlogData(
   existing?: BlogPost,
 ) {
   const title = String(input.title ?? existing?.title ?? '');
-  const slug = input.slug ? String(input.slug) : slugify(title);
+  const rawSlug = input.slug ? String(input.slug) : slugify(title);
+  const slug = rawSlug.trim() || slugify(title) || `post-${Date.now()}`;
   const content = String(input.content ?? existing?.content ?? '');
   const status = (input.status as BlogPostStatus) ?? existing?.status ?? BlogPostStatus.DRAFT;
   const scheduledAt =

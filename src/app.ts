@@ -24,6 +24,7 @@ import analyticsRoutes from './routes/analytics.routes';
 import contentRoutes from './routes/content.routes';
 import newsletterRoutes from './routes/newsletter.routes';
 import publicRoutes from './routes/public.routes';
+import aiRoutes from './routes/ai.routes';
 
 export function createApp() {
   const app = express();
@@ -105,6 +106,7 @@ export function createApp() {
   app.use('/api/content', contentRoutes);
   app.use('/api/newsletter', newsletterRoutes);
   app.use('/api/public', publicRoutes);
+  app.use('/api/ai', aiRoutes);
 
   app.use(errorHandler);
 

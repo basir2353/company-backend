@@ -6,7 +6,7 @@ import { authenticate } from '../middleware/auth';
 import { authorize } from '../middleware/rbac';
 import { asyncHandler, ApiError } from '../middleware/errorHandler';
 import { slugify, paramId } from '../utils/helpers';
-import { prepareBlogData, serializeBlogPost, isBlogPublic } from '../services/blog.service';
+import { prepareBlogData, serializeBlogPost, isBlogPublic, ensureUniqueBlogSlug } from '../services/blog.service';
 
 const router = Router();
 
@@ -157,6 +157,7 @@ router.post(
   asyncHandler(async (req, res) => {
     const parsed = blogSchema.parse(req.body);
     const data = prepareBlogData(parsed);
+    data.slug = await ensureUniqueBlogSlug(data.slug);
     const post = await prisma.blogPost.create({ data });
     res.status(201).json({ post: serializeBlogPost(post) });
   }),
@@ -173,6 +174,7 @@ router.put(
 
     const parsed = blogSchema.partial().parse(req.body);
     const data = prepareBlogData(parsed, existing);
+    data.slug = await ensureUniqueBlogSlug(data.slug, id);
     const post = await prisma.blogPost.update({ where: { id }, data });
     res.json({ post: serializeBlogPost(post) });
   }),
