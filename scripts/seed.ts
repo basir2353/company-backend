@@ -40,12 +40,14 @@ async function main() {
     create: { id: 'default' },
   });
 
+  const liveSiteUrl = 'https://www.creatd.it.com';
+
   await prisma.seoSettings.upsert({
     where: { id: 'default' },
-    update: {},
+    update: { siteUrl: liveSiteUrl },
     create: {
       id: 'default',
-      siteUrl: 'https://company-frontend-liart.vercel.app',
+      siteUrl: liveSiteUrl,
       siteName: 'Creatd',
       defaultTitle: 'Creatd — Think It. Creatd | AI Solutions',
       defaultDescription:

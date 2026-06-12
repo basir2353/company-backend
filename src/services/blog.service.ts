@@ -60,7 +60,7 @@ export function isBlogPublic(post: BlogPost, now = new Date()): boolean {
 
 export function buildSchemaMarkup(
   post: Pick<BlogPost, 'title' | 'excerpt' | 'author' | 'authorAvatar' | 'date' | 'featuredImage' | 'thumbnail' | 'slug'>,
-  siteUrl = 'https://gemivora.com',
+  siteUrl = 'https://www.creatd.it.com',
 ) {
   const image = post.featuredImage || post.thumbnail;
   return JSON.stringify(

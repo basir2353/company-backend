@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
-import { parseCorsOrigins } from './config/cors';
+import { getAllowedOrigins, createCorsOriginChecker } from './config/cors';
 import { env } from './config/env';
 import { errorHandler } from './middleware/errorHandler';
 import { prisma } from './utils/prisma';
@@ -34,8 +34,10 @@ export function createApp() {
   app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
   app.use(
     cors({
-      origin: parseCorsOrigins(env.CORS_ORIGIN),
+      origin: createCorsOriginChecker(getAllowedOrigins(env.CORS_ORIGIN, env.NODE_ENV)),
       credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
     }),
   );
   app.use(morgan(env.NODE_ENV === 'development' ? 'dev' : 'combined'));

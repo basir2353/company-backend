@@ -33,7 +33,11 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(16),
   JWT_EXPIRES_IN: z.string().default('7d'),
   PORT: z.coerce.number().default(4000),
-  CORS_ORIGIN: z.string().default('http://localhost:3001'),
+  CORS_ORIGIN: z
+    .string()
+    .default(
+      'http://localhost:3000,http://localhost:3001,https://admin.creatd.it.com,https://creatd.it.com,https://www.creatd.it.com,https://company-frontend-liart.vercel.app,https://compnay-admin.vercel.app',
+    ),
   UPLOAD_DIR: z.string().default('./uploads'),
   MAX_FILE_SIZE: z.coerce.number().default(10_485_760),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
