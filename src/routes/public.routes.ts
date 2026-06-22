@@ -8,6 +8,7 @@ import {
   generateSitemapUrls,
   getSeoSettings,
   serializeSeoPage,
+  serializeSeoSettings,
 } from '../services/seo.service';
 import { getOrCreateHomeSections } from './home-sections.routes';
 import { normalizeMediaUrl } from '../utils/media-url';
@@ -131,7 +132,7 @@ router.get(
   '/seo-settings',
   asyncHandler(async (_req, res) => {
     const settings = await getSeoSettings();
-    res.json({ settings });
+    res.json({ settings: serializeSeoSettings(settings) });
   }),
 );
 

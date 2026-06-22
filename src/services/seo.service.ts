@@ -16,6 +16,34 @@ export async function getSeoSettings(): Promise<SeoSettings> {
   return settings;
 }
 
+export function normalizeGoogleSiteVerification(raw?: string | null): string | null {
+  if (!raw?.trim()) return null;
+
+  let token = raw.trim();
+  token = token.replace(/^<meta[^>]+content=["']/i, '');
+  token = token.replace(/["'][^>]*>/i, '');
+  token = token.replace(/^google-site-verification:\s*/i, '');
+  token = token.replace(/\.html$/i, '');
+
+  return token.trim() || null;
+}
+
+export function normalizeSiteUrl(url?: string | null): string {
+  const fallback = 'https://www.creatd.it.com';
+  if (!url?.trim()) return fallback;
+  return url.trim().replace(/\/+$/, '').replace(/^http:\/\//i, 'https://');
+}
+
+export function serializeSeoSettings(settings: SeoSettings) {
+  return {
+    ...settings,
+    siteUrl: `${normalizeSiteUrl(settings.siteUrl)}/`,
+    googleSearchConsoleVerification: normalizeGoogleSiteVerification(
+      settings.googleSearchConsoleVerification,
+    ),
+  };
+}
+
 export function buildDefaultSchema(
   page: Pick<SeoPage, 'path' | 'title' | 'description'>,
   settings: SeoSettings,
