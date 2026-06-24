@@ -4,16 +4,16 @@ import { ensureDatabaseReady } from './db/setup';
 import { prisma } from './utils/prisma';
 
 async function main() {
-  try {
-    await ensureDatabaseReady();
-  } catch (error) {
-    console.error('[db] Startup setup failed:', error);
-  }
-
   const app = createApp();
 
   app.listen(env.PORT, '0.0.0.0', () => {
-    console.log(`Gemivora CMS API running on port ${env.PORT}`);
+    console.log(`Gemivora CMS API running on port ${env.PORT} (${env.NODE_ENV})`);
+    console.log(`Health: http://0.0.0.0:${env.PORT}/health`);
+  });
+
+  // Run DB migrations/seed in background so Railway health checks pass immediately.
+  void ensureDatabaseReady().catch((error) => {
+    console.error('[db] Startup setup failed:', error);
   });
 }
 

@@ -7,6 +7,11 @@ function normalizeDatabaseUrl(url: string): string {
   if (!url) return url;
   if (url.includes('sslmode=')) return url;
 
+  // Railway private Postgres — no SSL on internal network
+  const isRailwayInternal =
+    /\.railway\.internal(\/|:)/i.test(url) || /@postgres\.railway\.internal/i.test(url);
+  if (isRailwayInternal) return url;
+
   // Render private-network URLs (e.g. @dpg-xxx-a/db) must not force SSL
   const isRenderInternal =
     /@dpg-[a-z0-9]+-a(\/|:)/i.test(url) && !/\.render\.com/i.test(url);
