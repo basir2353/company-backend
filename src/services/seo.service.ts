@@ -137,14 +137,18 @@ export async function generateSitemapUrls(): Promise<SitemapUrl[]> {
     });
   }
 
-  const portfolio = await prisma.portfolioProject.findMany({ where: { published: true } });
-  for (const project of portfolio) {
-    urls.push({
-      loc: `${base}/portfolio#${project.slug}`,
-      lastmod: project.updatedAt.toISOString(),
-      changefreq: 'monthly',
-      priority: 0.5,
-    });
+  // Portfolio projects are anchor sections on /portfolio — hash URLs are not indexable as separate pages.
+  const portfolioPage = pages.find((p) => p.path === '/portfolio');
+  if (portfolioPage) {
+    const alreadyListed = urls.some((u) => u.loc === `${base}/portfolio`);
+    if (!alreadyListed) {
+      urls.push({
+        loc: `${base}/portfolio`,
+        lastmod: portfolioPage.updatedAt.toISOString(),
+        changefreq: portfolioPage.sitemapChangeFreq,
+        priority: portfolioPage.sitemapPriority,
+      });
+    }
   }
 
   return urls;
