@@ -174,6 +174,8 @@ export async function generateRobotsTxt(): Promise<string> {
     'Allow: /',
     '',
     `Sitemap: ${base}/sitemap.xml`,
+    `Sitemap: ${base}/sitemap-page.xml`,
+    `Sitemap: ${base}/sitemap-post.xml`,
   ];
 
   if (settings.robotsTxtCustom?.trim()) {
