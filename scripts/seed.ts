@@ -53,6 +53,7 @@ async function main() {
       defaultDescription:
         'Creatd builds AI automation and software products for teams that want scalable digital experiences.',
       defaultTwitterHandle: '@creatd',
+      googleSearchConsoleVerification: 'googleb923836d3b59de5b',
       sitemapAutoGenerate: true,
     },
   });

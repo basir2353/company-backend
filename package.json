@@ -10,6 +10,7 @@
     "postinstall": "prisma generate",
     "start": "node dist/index.js",
     "start:render": "npm run db:setup && node dist/index.js",
+    "start:railway": "node dist/index.js",
     "start:docker": "npm run db:setup && node dist/index.js",
     "db:setup": "prisma db push && prisma db seed",
     "db:generate": "prisma generate",

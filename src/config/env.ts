@@ -15,6 +15,8 @@ function normalizeDatabaseUrl(url: string): string {
   const needsSsl =
     process.env.DATABASE_SSL === 'true' ||
     url.includes('render.com') ||
+    url.includes('rlwy.net') ||
+    url.includes('railway.app') ||
     (process.env.NODE_ENV === 'production' && url.includes('@dpg-'));
 
   if (!needsSsl) return url;

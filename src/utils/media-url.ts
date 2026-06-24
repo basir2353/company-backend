@@ -1,10 +1,17 @@
 import { env } from '../config/env';
 
-const DEFAULT_PUBLIC_BASE = 'https://company-backend-qy0h.onrender.com';
+const DEFAULT_PUBLIC_BASE = 'https://company-backend-production-bb4b.up.railway.app';
 
 export function getPublicBaseUrl(): string {
   const configured = process.env.PUBLIC_BASE_URL?.trim().replace(/\/+$/, '');
   if (configured) return configured.replace(/^http:\/\//i, 'https://');
+
+  const railwayDomain = process.env.RAILWAY_PUBLIC_DOMAIN?.trim().replace(/\/+$/, '');
+  if (railwayDomain) {
+    const host = railwayDomain.replace(/^https?:\/\//i, '');
+    return `https://${host}`;
+  }
+
   if (env.NODE_ENV === 'production') return DEFAULT_PUBLIC_BASE;
   return `http://localhost:${env.PORT}`;
 }
