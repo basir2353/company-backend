@@ -1,6 +1,6 @@
 import { env } from '../config/env';
 
-const DEFAULT_PUBLIC_BASE = 'https://company-backend-production-bb4b.up.railway.app';
+const DEFAULT_PUBLIC_BASE = 'https://company-backend-production-772f.up.railway.app';
 
 function preferHttpsOutsideLocalhost(url: string): string {
   try {

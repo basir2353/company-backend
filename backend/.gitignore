@@ -1,6 +1,37 @@
+# dependencies & build
 node_modules/
 dist/
+.turbo/
+*.tsbuildinfo
+
+# uploads (keep folder)
 uploads/*
 !uploads/.gitkeep
+
+# secrets & local env — never commit
 .env
+.env.*
+!.env.example
+!.env.railway.example
+!.env*.example
+
+# keys / certs / credentials
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+.secrets/
+
+# logs & OS
 *.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# IDE / local tooling
+.vscode/
+.idea/
+.vercel/
+.railway/
