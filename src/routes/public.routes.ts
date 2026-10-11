@@ -12,6 +12,7 @@ import {
 } from '../services/seo.service';
 import { getOrCreateHomeSections } from './home-sections.routes';
 import { normalizeMediaUrl } from '../utils/media-url';
+import { serializeBusinessSystem } from '../utils/business-system';
 
 const router = Router();
 
@@ -114,6 +115,32 @@ router.get(
         beforeImage: normalizeMediaUrl(c.beforeImage) ?? c.beforeImage,
       })),
     });
+  }),
+);
+
+router.get(
+  '/business-systems',
+  asyncHandler(async (_req, res) => {
+    const systems = await prisma.businessSystem.findMany({
+      where: { status: 'ACTIVE' },
+      orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
+    });
+    res.json({ systems: systems.map(serializeBusinessSystem) });
+  }),
+);
+
+router.get(
+  '/business-systems/:slug',
+  asyncHandler(async (req, res) => {
+    const slug = Array.isArray(req.params.slug) ? req.params.slug[0] : req.params.slug;
+    const system = await prisma.businessSystem.findFirst({
+      where: { slug, status: 'ACTIVE' },
+    });
+    if (!system) {
+      res.status(404).json({ error: 'Business system not found' });
+      return;
+    }
+    res.json({ system: serializeBusinessSystem(system) });
   }),
 );
 

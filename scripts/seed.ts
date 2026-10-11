@@ -1,4 +1,4 @@
-import { PrismaClient, Role, LeadStatus } from '@prisma/client';
+import { PrismaClient, Role, LeadStatus, BusinessSystemStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -424,6 +424,78 @@ async function main() {
     ],
     skipDuplicates: true,
   });
+
+  /** Migrated from company-Frontend static catalogue — safe to re-run (upsert by slug). */
+  const defaultBusinessSystems = [
+    {
+      slug: 'restaurant-erp-pops',
+      name: 'Restaurant ERP — POPS',
+      category: 'Restaurant ERP',
+      shortDescription:
+        'Restaurant ERP available for client demos. Request a walkthrough to evaluate fit for your operations.',
+      description:
+        'POPS is Creatd’s restaurant ERP product line, presented here for client demos and evaluation. Contact us to schedule a guided demo tailored to your restaurant workflows.',
+      image: '/images/business-systems/restaurant-erp-pops.svg',
+      sortOrder: 1,
+    },
+    {
+      slug: 'pharmacy-erp',
+      name: 'Pharmacy ERP',
+      category: 'Pharmacy ERP',
+      shortDescription:
+        'Pharmacy ERP available for client demos. Request a walkthrough to evaluate fit for your pharmacy operations.',
+      description:
+        'Pharmacy ERP is Creatd’s pharmacy-focused business system, presented here for client demos and evaluation. Contact us to schedule a guided demo for your pharmacy workflows.',
+      image: '/images/business-systems/pharmacy-erp.svg',
+      sortOrder: 2,
+    },
+    {
+      slug: 'general-store-erp',
+      name: 'General Store ERP',
+      category: 'Retail ERP',
+      shortDescription:
+        'General store ERP available for client demos. Request a walkthrough to evaluate fit for your retail operations.',
+      description:
+        'General Store ERP is Creatd’s retail / general-store business system, presented here for client demos and evaluation. Contact us to schedule a guided demo for your store workflows.',
+      image: '/images/business-systems/general-store-erp.svg',
+      sortOrder: 3,
+    },
+    {
+      slug: 'materialflow-erp',
+      name: 'MaterialFlow ERP',
+      category: 'Materials ERP',
+      shortDescription:
+        'MaterialFlow ERP available for client demos. Request a walkthrough to evaluate fit for your materials workflows.',
+      description:
+        'MaterialFlow ERP is Creatd’s materials-focused business system, presented here for client demos and evaluation. Contact us to schedule a guided demo for your materials and inventory workflows.',
+      image: '/images/business-systems/materialflow-erp.svg',
+      sortOrder: 4,
+    },
+  ];
+
+  for (const item of defaultBusinessSystems) {
+    await prisma.businessSystem.upsert({
+      where: { slug: item.slug },
+      update: {
+        name: item.name,
+        category: item.category,
+        shortDescription: item.shortDescription,
+        description: item.description,
+        image: item.image,
+        sortOrder: item.sortOrder,
+      },
+      create: {
+        ...item,
+        screenshots: [],
+        features: [],
+        modules: [],
+        technologies: [],
+        demoAvailable: true,
+        requestDemoEnabled: true,
+        status: BusinessSystemStatus.ACTIVE,
+      },
+    });
+  }
 
   console.log('Seed completed.');
   console.log('Admin login: admin@gemivora.com / Admin123!');

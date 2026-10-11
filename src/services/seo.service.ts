@@ -137,6 +137,19 @@ export async function generateSitemapUrls(): Promise<SitemapUrl[]> {
     });
   }
 
+  const businessSystems = await prisma.businessSystem.findMany({
+    where: { status: 'ACTIVE' },
+    orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
+  });
+  for (const system of businessSystems) {
+    urls.push({
+      loc: `${base}/business-systems/${system.slug}`,
+      lastmod: system.updatedAt.toISOString(),
+      changefreq: 'weekly',
+      priority: 0.7,
+    });
+  }
+
   // Portfolio projects are anchor sections on /portfolio — hash URLs are not indexable as separate pages.
   const portfolioPage = pages.find((p) => p.path === '/portfolio');
   if (portfolioPage) {

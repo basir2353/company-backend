@@ -2,9 +2,21 @@ import { env } from '../config/env';
 
 const DEFAULT_PUBLIC_BASE = 'https://company-backend-production-bb4b.up.railway.app';
 
+function preferHttpsOutsideLocalhost(url: string): string {
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1') {
+      return url; // browsers cannot load https://localhost without a cert
+    }
+  } catch {
+    /* keep original */
+  }
+  return url.replace(/^http:\/\//i, 'https://');
+}
+
 export function getPublicBaseUrl(): string {
   const configured = process.env.PUBLIC_BASE_URL?.trim().replace(/\/+$/, '');
-  if (configured) return configured.replace(/^http:\/\//i, 'https://');
+  if (configured) return preferHttpsOutsideLocalhost(configured);
 
   const railwayDomain = process.env.RAILWAY_PUBLIC_DOMAIN?.trim().replace(/\/+$/, '');
   if (railwayDomain) {
@@ -51,6 +63,12 @@ export function normalizeMediaUrl(url?: string | null): string | null {
     return `${base}${trimmed}`;
   }
 
+  // Frontend public assets (e.g. Business Systems catalogue SVGs) — keep relative
+  // so the marketing site serves them from its own `public/` folder.
+  if (trimmed.startsWith('/images/')) {
+    return trimmed;
+  }
+
   if (trimmed.startsWith('/')) {
     return `${base}${trimmed}`;
   }
@@ -58,6 +76,10 @@ export function normalizeMediaUrl(url?: string | null): string | null {
   try {
     const parsed = new URL(trimmed);
     const baseHost = new URL(base).host;
+
+    if (parsed.pathname.startsWith('/images/')) {
+      return parsed.pathname;
+    }
 
     if (
       parsed.hostname === 'localhost' ||

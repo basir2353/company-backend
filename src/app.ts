@@ -20,6 +20,7 @@ import leadsRoutes from './routes/leads.routes';
 import themeRoutes from './routes/theme.routes';
 import homeSectionsRoutes from './routes/home-sections.routes';
 import caseStudiesRoutes from './routes/case-studies.routes';
+import businessSystemsRoutes from './routes/business-systems.routes';
 import analyticsRoutes from './routes/analytics.routes';
 import contentRoutes from './routes/content.routes';
 import newsletterRoutes from './routes/newsletter.routes';
@@ -104,6 +105,7 @@ export function createApp() {
   app.use('/api/theme', themeRoutes);
   app.use('/api/home-sections', homeSectionsRoutes);
   app.use('/api/case-studies', caseStudiesRoutes);
+  app.use('/api/business-systems', businessSystemsRoutes);
   app.use('/api/analytics', analyticsRoutes);
   app.use('/api/content', contentRoutes);
   app.use('/api/newsletter', newsletterRoutes);
