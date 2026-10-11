@@ -428,48 +428,124 @@ async function main() {
   /** Migrated from company-Frontend static catalogue — safe to re-run (upsert by slug). */
   const defaultBusinessSystems = [
     {
-      slug: 'restaurant-erp-pops',
-      name: 'Restaurant ERP — POPS',
-      category: 'Restaurant ERP',
-      shortDescription:
-        'Restaurant ERP available for client demos. Request a walkthrough to evaluate fit for your operations.',
+      slug: 'business-erp',
+      name: 'Business ERP',
+      category: 'Business ERP',
+      shortDescription: 'Core business operations, finance, and team management.',
       description:
-        'POPS is Creatd’s restaurant ERP product line, presented here for client demos and evaluation. Contact us to schedule a guided demo tailored to your restaurant workflows.',
-      image: '/images/business-systems/restaurant-erp-pops.svg',
+        'Business ERP is Creatd’s general operations suite for finance, HR-light workflows, and day-to-day management. Contact us to schedule a guided demo.',
+      image: '/images/business-systems/business-erp.svg',
       sortOrder: 1,
     },
     {
-      slug: 'pharmacy-erp',
-      name: 'Pharmacy ERP',
-      category: 'Pharmacy ERP',
-      shortDescription:
-        'Pharmacy ERP available for client demos. Request a walkthrough to evaluate fit for your pharmacy operations.',
+      slug: 'restaurant-erp-pops',
+      name: 'Restaurant ERP — POPS',
+      category: 'Restaurant ERP',
+      shortDescription: 'Orders, inventory, and billing for restaurant operations.',
       description:
-        'Pharmacy ERP is Creatd’s pharmacy-focused business system, presented here for client demos and evaluation. Contact us to schedule a guided demo for your pharmacy workflows.',
-      image: '/images/business-systems/pharmacy-erp.svg',
+        'POPS is Creatd’s restaurant ERP product line for orders, inventory, and billing. Contact us to schedule a guided demo tailored to your restaurant workflows.',
+      image: '/images/business-systems/restaurant-erp-pops.svg',
       sortOrder: 2,
+    },
+    {
+      slug: 'distribution-erp',
+      name: 'Distribution ERP',
+      category: 'Distribution ERP',
+      shortDescription: 'Wholesale stock, routes, and fulfilment for distributors.',
+      description:
+        'Distribution ERP helps wholesale and distribution teams manage inventory, routes, and fulfilment. Contact us to schedule a guided demo.',
+      image: '/images/business-systems/distribution-erp.svg',
+      sortOrder: 3,
+    },
+    {
+      slug: 'education-erp',
+      name: 'Education ERP',
+      category: 'Education ERP',
+      shortDescription: 'Admissions, fees, academics, and campus administration.',
+      description:
+        'Education ERP supports schools and institutes with admissions, fees, academics, and campus administration. Contact us to schedule a guided demo.',
+      image: '/images/business-systems/education-erp.svg',
+      sortOrder: 4,
     },
     {
       slug: 'general-store-erp',
       name: 'General Store ERP',
       category: 'Retail ERP',
-      shortDescription:
-        'General store ERP available for client demos. Request a walkthrough to evaluate fit for your retail operations.',
+      shortDescription: 'Retail POS, inventory, and store-level operations.',
       description:
-        'General Store ERP is Creatd’s retail / general-store business system, presented here for client demos and evaluation. Contact us to schedule a guided demo for your store workflows.',
+        'General Store ERP is Creatd’s retail ERP for POS, inventory, and store-level operations. Contact us to schedule a guided demo for your retail workflows.',
       image: '/images/business-systems/general-store-erp.svg',
-      sortOrder: 3,
+      sortOrder: 5,
+    },
+    {
+      slug: 'pharmacy-erp',
+      name: 'Pharmacy ERP',
+      category: 'Pharmacy ERP',
+      shortDescription: 'Pharmacy stock, sales, and compliance-focused operations.',
+      description:
+        'Pharmacy ERP is Creatd’s pharmacy-focused ERP for stock, sales, and day-to-day pharmacy workflows. Contact us to schedule a guided demo.',
+      image: '/images/business-systems/pharmacy-erp.svg',
+      sortOrder: 6,
     },
     {
       slug: 'materialflow-erp',
       name: 'MaterialFlow ERP',
       category: 'Materials ERP',
-      shortDescription:
-        'MaterialFlow ERP available for client demos. Request a walkthrough to evaluate fit for your materials workflows.',
+      shortDescription: 'Materials, inventory movement, and warehouse workflows.',
       description:
-        'MaterialFlow ERP is Creatd’s materials-focused business system, presented here for client demos and evaluation. Contact us to schedule a guided demo for your materials and inventory workflows.',
+        'MaterialFlow ERP is Creatd’s materials-focused ERP for inventory movement and warehouse workflows. Contact us to schedule a guided demo.',
       image: '/images/business-systems/materialflow-erp.svg',
-      sortOrder: 4,
+      sortOrder: 7,
+    },
+    {
+      slug: 'manufacturing-erp',
+      name: 'Manufacturing ERP',
+      category: 'Manufacturing ERP',
+      shortDescription: 'Production planning, BOM, and shop-floor tracking.',
+      description:
+        'Manufacturing ERP covers production planning, bill of materials, and shop-floor tracking for plant operations. Contact us to schedule a guided demo.',
+      image: '/images/business-systems/manufacturing-erp.svg',
+      sortOrder: 8,
+    },
+    {
+      slug: 'hospitality-erp',
+      name: 'Hospitality ERP',
+      category: 'Hospitality ERP',
+      shortDescription: 'Hotels, rooms, guest billing, and property operations.',
+      description:
+        'Hospitality ERP supports hotels and properties with rooms, guest billing, and property operations. Contact us to schedule a guided demo.',
+      image: '/images/business-systems/hospitality-erp.svg',
+      sortOrder: 9,
+    },
+    {
+      slug: 'clinic-erp',
+      name: 'Clinic ERP',
+      category: 'Healthcare ERP',
+      shortDescription: 'Appointments, patient records, and clinic billing.',
+      description:
+        'Clinic ERP helps clinics manage appointments, patient records, and billing workflows. Contact us to schedule a guided demo.',
+      image: '/images/business-systems/clinic-erp.svg',
+      sortOrder: 10,
+    },
+    {
+      slug: 'warehouse-erp',
+      name: 'Warehouse ERP',
+      category: 'Warehouse ERP',
+      shortDescription: 'Inbound, outbound, and multi-location stock control.',
+      description:
+        'Warehouse ERP focuses on inbound/outbound flows and multi-location stock control. Contact us to schedule a guided demo.',
+      image: '/images/business-systems/warehouse-erp.svg',
+      sortOrder: 11,
+    },
+    {
+      slug: 'salon-spa-erp',
+      name: 'Salon & Spa ERP',
+      category: 'Services ERP',
+      shortDescription: 'Bookings, staff schedules, and service billing.',
+      description:
+        'Salon & Spa ERP covers bookings, staff schedules, and service billing for lifestyle businesses. Contact us to schedule a guided demo.',
+      image: '/images/business-systems/salon-spa-erp.svg',
+      sortOrder: 12,
     },
   ];
 
